@@ -1,5 +1,6 @@
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -13,6 +14,10 @@ public class CanOptimizer {
         double volumeDiff;
         double percentDiff;
         double moneySaved;
+        double oRadius;
+        double oHeight;
+        double oSurfaceArea;
+        double[] values;
 
         Scanner Scan = new Scanner(System.in);
         DecimalFormat df = new DecimalFormat("#.###");
@@ -39,18 +44,25 @@ public class CanOptimizer {
         //System.out.println("The calculuated volume in cm is: " + volume);
         volumeDiff = Math.abs(volume - volume(radius,height));
         volumeDiff = Math.round(volumeDiff*Math.pow(10,3))/Math.pow(10,3);
+
+        values = Arrays.copyOf(optimizedSurfaceArea(radius, volume), 3);
+        oRadius = values[0];
+        oHeight = values[1];
+        oSurfaceArea = values[2];
         
-        percentDiff = (surfaceArea(radius, height) - optimizedSurfaceArea(radius, volume))/(surfaceArea(radius, height)) * 100;
+        percentDiff = (surfaceArea(radius, height) - oSurfaceArea)/(surfaceArea(radius, height)) * 100;
         percentDiff = Math.round(percentDiff*Math.pow(10,3))/Math.pow(10,3);
 
         moneySaved = 14400000*(percentDiff/100);
         String ms = cf.format(moneySaved);
-
+         
         System.out.println("The difference in volume is " + volumeDiff + "cm^3 or " + df.format(volumeDiff/29.574) + "oz");
-        System.out.println("The calculuated optimized surfaceArea is: " + optimizedSurfaceArea(radius, volume) + "cm^2");
+        System.out.println("The calculuated optimized surfaceArea is: " + oSurfaceArea + "cm^2");
+        System.out.println("That is calculated with an optimized radius of " + oRadius + "cm and and optimized height of " + oHeight + "cm");
         System.out.println("An optimized can will save " + percentDiff + "% more metal!");
         System.out.println("This optimized can will save " + ms);
-
+       
+        
 
 
     }
@@ -72,7 +84,7 @@ public class CanOptimizer {
         return surfaceArea;
     } 
 
-    public static double optimizedSurfaceArea (double radius, double volume){
+    public static double[] optimizedSurfaceArea (double radius, double volume){
         double oRadius;
         double oHeight;
         double surfaceArea;
@@ -85,6 +97,6 @@ public class CanOptimizer {
         surfaceArea = (2*Math.PI*oRadius*oHeight) + (2*Math.PI*Math.pow(oRadius, 2));
         surfaceArea = Math.round(surfaceArea*Math.pow(10,3))/Math.pow(10,3);
         
-        return surfaceArea;
+        return new double[]{oRadius, oHeight, surfaceArea};
     }
 }
